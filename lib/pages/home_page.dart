@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,8 +13,11 @@ class _HomePageState extends State<HomePage> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Home', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-    Text('Category', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-    Text('Stats', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
+    ExpensePage(),
+    Text('Category',
+        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
+    Text('Stats',
+        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
     Text('User', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
   ];
 
@@ -33,9 +37,8 @@ class _HomePageState extends State<HomePage> {
           margin: const EdgeInsets.only(bottom: 24.0),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(16.0),
-              bottomRight: Radius.circular(16.0)
-            ),
+                bottomLeft: Radius.circular(16.0),
+                bottomRight: Radius.circular(16.0)),
             child: AppBar(
               title: const Text(
                 "Money Manager",
@@ -43,7 +46,6 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
-                  letterSpacing: 6.0,
                 ),
               ),
               centerTitle: true,
@@ -62,6 +64,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.note_add), label: 'Note'),
           BottomNavigationBarItem(
             icon: Icon(Icons.category),
             label: 'Category',
