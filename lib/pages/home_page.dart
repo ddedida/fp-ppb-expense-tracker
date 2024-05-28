@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,8 +15,7 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Home', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
     ExpensePage(),
-    Text('Category',
-        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
+    CategoryPage(),
     Text('Stats',
         style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
     Text('User', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
