@@ -1,5 +1,10 @@
 const tableExpenses = 'expenses';
 
+var expenseType = const <int, String>{
+  1: "Pengeluaran",
+  2: "Pemasukan",
+};
+
 class ExpenseFields {
   static final List<String> values = [
     id,

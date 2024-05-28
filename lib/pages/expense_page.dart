@@ -13,6 +13,14 @@ class _ExpensePageState extends State<ExpensePage> {
   late List<Expense> expenses;
   bool isLoading = false;
 
+  Future refreshExpenses() async {
+    setState(() => isLoading = true);
+
+    expenses = await ExpensesDatabases.instance.readAllExpenses();
+
+    setState(() => isLoading = false);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -22,15 +30,8 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   void dispose() {
     ExpensesDatabases.instance.close();
+
     super.dispose();
-  }
-
-  Future refreshExpenses() async {
-    setState(() => isLoading = true);
-
-    expenses = await ExpensesDatabases.instance.readAllExpenses();
-
-    setState(() => isLoading = false);
   }
 
   @override
