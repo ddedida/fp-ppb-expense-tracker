@@ -31,11 +31,11 @@ class Expense {
   final int? id;
   final String? title;
   final double amount;
-  final String date;
+  final DateTime date;
   final int typeId;
   final String? categoryId;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const Expense({
     this.id,
@@ -52,11 +52,11 @@ class Expense {
     int? id,
     String? title,
     double? amount,
-    String? date,
+    DateTime? date,
     int? typeId,
     String? categoryId,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) =>
       Expense(
         id: id ?? this.id,
@@ -73,21 +73,24 @@ class Expense {
         id: json[ExpenseFields.id] as int,
         title: json[ExpenseFields.title] as String,
         amount: json[ExpenseFields.amount] as double,
-        date: json[ExpenseFields.date] as String,
+        date: DateTime.fromMillisecondsSinceEpoch(
+            int.parse(json[ExpenseFields.date] as String)),
         typeId: json[ExpenseFields.typeId] as int,
         categoryId: json[ExpenseFields.categoryId] as String,
-        createdAt: json[ExpenseFields.createdAt] as String,
-        updatedAt: json[ExpenseFields.updatedAt] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(
+            int.parse(json[ExpenseFields.createdAt] as String)),
+        updatedAt: DateTime.fromMillisecondsSinceEpoch(
+            int.parse(json[ExpenseFields.updatedAt] as String)),
       );
 
   Map<String, Object?> toJson() => {
         ExpenseFields.id: id,
         ExpenseFields.title: title,
         ExpenseFields.amount: amount,
-        ExpenseFields.date: date,
+        ExpenseFields.date: date.millisecondsSinceEpoch,
         ExpenseFields.typeId: typeId,
         ExpenseFields.categoryId: categoryId,
-        ExpenseFields.createdAt: createdAt,
-        ExpenseFields.updatedAt: updatedAt,
+        ExpenseFields.createdAt: createdAt.millisecondsSinceEpoch,
+        ExpenseFields.updatedAt: updatedAt.millisecondsSinceEpoch,
       };
 }

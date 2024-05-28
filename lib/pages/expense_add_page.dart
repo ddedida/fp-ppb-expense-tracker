@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
 
 class ExpenseAddPage extends StatefulWidget {
   final Expense? expense;
+
   const ExpenseAddPage({super.key, this.expense});
 
   @override
@@ -14,7 +16,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
   final _formKey = GlobalKey<FormState>();
   late String _title;
   late double _amount;
-  late String _date;
+  late DateTime _date;
   late int _typeId;
   late String _categoryId;
 
@@ -24,7 +26,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
     if (widget.expense == null) {
       _title = '';
       _amount = 0.0;
-      _date = '';
+      _date = DateTime.now();
       _typeId = 0;
       _categoryId = '';
     } else {
@@ -74,17 +76,13 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   _amount = double.parse(value!);
                 },
               ),
-              TextFormField(
-                initialValue: _date,
-                decoration: const InputDecoration(labelText: 'Date'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter date';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _date = value!;
+              SizedBox(height: 16),
+              InputDatePickerFormField(
+                initialDate: _date,
+                firstDate: DateTime(1999),
+                lastDate: DateTime.now(),
+                onDateSaved: (value) {
+                  _date = value;
                 },
               ),
               TextFormField(
@@ -133,8 +131,8 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
       date: _date,
       typeId: _typeId,
       categoryId: _categoryId,
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
 
     await ExpensesDatabases.instance.create(expense);
@@ -147,7 +145,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
       date: _date,
       typeId: _typeId,
       categoryId: _categoryId,
-      updatedAt: DateTime.now().toString(),
+      updatedAt: DateTime.now(),
     );
 
     await ExpensesDatabases.instance.update(expense);

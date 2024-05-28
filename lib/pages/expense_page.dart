@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../model/expenses.dart';
 import '../infrastructure/db/expenses.dart';
 
@@ -46,7 +47,8 @@ class _ExpensePageState extends State<ExpensePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed('/expense/add');
+          Navigator.pushNamed(context, '/expense/add')
+              .then((_) => refreshExpenses());
         },
         child: const Icon(Icons.add),
       ),
@@ -57,15 +59,55 @@ class _ExpensePageState extends State<ExpensePage> {
         itemCount: expenses.length,
         itemBuilder: (context, index) {
           final expense = expenses[index];
+          final date = expense.date;
+          final formattedDate = DateFormat.yMMMd().format(date);
+          final expensesByDate = expenses.where((e) => e.date == date).toList();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (index == 0 || date != expenses[index - 1].date)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text(
+                    formattedDate,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ListTile(
+                subtitle: Text(expense.title ?? ""),
+                title: Text('\$${expense.amount.toStringAsFixed(2)}'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        await Navigator.of(context).pushNamed(
+                          '/expense/add',
+                          arguments: expense,
+                        );
 
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            elevation: 4.0,
-            child: ListTile(
-              title: Text(expense.title ?? 'No title'),
-              subtitle: Text(expense.amount.toString()),
-              trailing: Text(expense.date),
-            ),
+                        refreshExpenses();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () async {
+                        await ExpensesDatabases.instance.delete(expense.id!);
+                        refreshExpenses();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              if (index == expenses.length - 1 ||
+                  date != expenses[index + 1].date)
+                const Divider(),
+            ],
           );
         },
       );

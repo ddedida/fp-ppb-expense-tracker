@@ -19,7 +19,15 @@ class ExpensesDatabases {
     final dbPath = await getDatabasesPath();
     final path = dbPath + filePath;
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path,
+        version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      await db.execute('DROP TABLE IF EXISTS $tableExpenses');
+      await _createDB(db, newVersion);
+    }
   }
 
   Future _createDB(Database db, int version) async {
@@ -84,7 +92,7 @@ class ExpensesDatabases {
     );
   }
 
-  Future<int> delete(String id) async {
+  Future<int> delete(int id) async {
     final db = await instance.database;
 
     return await db.delete(
