@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/components/navigation_bars.dart';
+import 'package:fp_ppb_expense_tracker/constant.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 
@@ -9,79 +11,65 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  int selectedIndex = ScreenSelected.home.value;
+  late final AnimationController controller;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-    ExpensePage(),
-    CategoryPage(),
-    Text('Stats',
-        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-    Text('User', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      value: 0,
+      duration: Duration(milliseconds: transitionLength.toInt() * 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
+      controller.reverse();
     });
+  }
+
+  Widget createScreen(ScreenSelected screenSelected) {
+    switch (screenSelected) {
+      case ScreenSelected.home:
+        return const Center(
+          child: Text("home"),
+        );
+      case ScreenSelected.expense:
+        return const ExpensePage();
+      case ScreenSelected.category:
+        return const CategoryPage();
+      case ScreenSelected.stats:
+        return const Center(child: Text('Stats'));
+      case ScreenSelected.user:
+        return const Center(child: Text('User'));
+      default:
+        return const SizedBox();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(72.0 + 24.0),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 24.0),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16.0),
-                bottomRight: Radius.circular(16.0)),
-            child: AppBar(
-              title: const Text(
-                "Money Manager",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
-              ),
-              centerTitle: true,
-              backgroundColor: Colors.blue[600],
-              toolbarHeight: 64.0,
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: Text('Expense Tracker'),
+        centerTitle: true,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.note_add), label: 'Note'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Category',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stacked_line_chart),
-            label: 'Stats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'User',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[500],
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
+      body: createScreen(ScreenSelected.values[selectedIndex]),
+      bottomNavigationBar: NavigationBars(
+        selectedIndex: selectedIndex,
+        onSelectItem: _onItemTapped,
+        navDestinations: appBarDestinations,
       ),
     );
   }
