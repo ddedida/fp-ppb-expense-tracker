@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/components/navigation_bars.dart';
 import 'package:fp_ppb_expense_tracker/constant.dart';
+import 'package:fp_ppb_expense_tracker/pages/budget_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 
@@ -49,6 +50,8 @@ class _HomePageState extends State<HomePage>
         return const ExpensePage();
       case ScreenSelected.category:
         return const CategoryPage();
+      case ScreenSelected.budget:
+        return const BudgetPage();
       case ScreenSelected.stats:
         return const Center(child: Text('Stats'));
       case ScreenSelected.user:

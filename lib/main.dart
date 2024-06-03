@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/pages/budget_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/home_page.dart';
+
 import 'constant.dart';
-import 'pages/expense_page.dart';
 import 'pages/expense_add_page.dart';
+import 'pages/expense_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,8 +55,8 @@ class _MyAppState extends State<MyApp> {
         '/expense': (context) => const ExpensePage(),
         '/expense/add': (context) => const ExpenseAddPage(),
         '/category': (context) => const CategoryPage(),
-        '/category/add': (context) =>
-            const CategoryAddPage(iconDataList: iconDataList),
+        '/category/add': (context) => const CategoryAddPage(),
+        '/budget': (context) => const BudgetPage(),
       },
       initialRoute: '/',
       home: const HomePage(),

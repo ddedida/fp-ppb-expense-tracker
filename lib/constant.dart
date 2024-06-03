@@ -32,8 +32,9 @@ enum ScreenSelected {
   home(0),
   expense(1),
   category(2),
-  stats(3),
-  user(4);
+  budget(3),
+  stats(4),
+  user(5);
 
   const ScreenSelected(this.value);
   final int value;
@@ -54,6 +55,11 @@ const List<NavigationDestination> appBarDestinations = [
     icon: Icon(Icons.category_outlined),
     label: 'Category',
     selectedIcon: Icon(Icons.category_rounded),
+  ),
+  NavigationDestination(
+    icon: Icon(Icons.paid_rounded),
+    label: 'Budget',
+    selectedIcon: Icon(Icons.paid_rounded),
   ),
   NavigationDestination(
     icon: Icon(Icons.bar_chart_outlined),
