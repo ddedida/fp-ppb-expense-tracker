@@ -22,43 +22,6 @@ class _BudgetPageState extends State<BudgetPage> {
     setState(() => isLoading = false);
   }
 
-  IconData _getIconDataFromTitle(String iconTitle) {
-    switch (iconTitle) {
-      case 'Icons.home':
-        return Icons.home;
-      case 'Icons.sports_soccer':
-        return Icons.sports_soccer;
-      case 'Icons.fastfood':
-        return Icons.fastfood;
-      case 'Icons.videogame_asset':
-        return Icons.videogame_asset;
-      case 'Icons.stacked_line_chart':
-        return Icons.stacked_line_chart;
-      case 'Icons.sports_motorsports':
-        return Icons.sports_motorsports;
-      case 'Icons.emoji_transportation':
-        return Icons.emoji_transportation;
-      case 'Icons.shopping_cart':
-        return Icons.shopping_cart;
-      case 'Icons.medication':
-        return Icons.medication;
-      case 'Icons.school':
-        return Icons.school;
-      case 'Icons.card_giftcard':
-        return Icons.card_giftcard;
-      case 'Icons.shield':
-        return Icons.shield;
-      case 'Icons.monetize_on':
-        return Icons.monetization_on;
-      case 'Icons.favorite':
-        return Icons.favorite;
-      case 'Icons.star':
-        return Icons.star;
-      default:
-        return Icons.help; // default icon
-    }
-  }
-
   @override
   void dispose() {
     CategoriesDatabases.instance.close();
@@ -99,8 +62,7 @@ class _BudgetPageState extends State<BudgetPage> {
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final category = categories[index];
-
-          IconData iconData = _getIconDataFromTitle(category.iconTitle!);
+          IconData iconData = IconData(category.iconCodePoint);
 
           return Card(
             margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),

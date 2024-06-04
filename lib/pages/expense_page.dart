@@ -31,7 +31,6 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   void dispose() {
     ExpensesDatabases.instance.close();
-
     super.dispose();
   }
 

@@ -1,9 +1,13 @@
 const tableExpenses = 'expenses';
 
-var expenseType = const <int, String>{
-  1: "Pengeluaran",
-  2: "Pemasukan",
-};
+enum ExpenseType {
+  expense(0),
+  income(1),
+  savings(2);
+
+  const ExpenseType(this.value);
+  final int value;
+}
 
 class ExpenseFields {
   static final List<String> values = [

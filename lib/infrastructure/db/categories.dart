@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
 import '../../model/categories.dart';
 
 class CategoriesDatabases {
@@ -19,20 +20,30 @@ class CategoriesDatabases {
     final dbPath = await getDatabasesPath();
     final path = dbPath + filePath;
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path,
+        version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      await db.execute('''
+        drop table if exists $tableCategories
+      ''');
+      await _createDB(db, newVersion);
+    }
   }
 
   Future _createDB(Database db, int version) async {
-    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const idType = 'TEXT PRIMARY KEY';
     const textType = 'TEXT NOT NULL';
     const integerType = 'INTEGER NOT NULL';
-    const doubleType = 'REAL NOT NULL';
 
     await db.execute('''
       CREATE TABLE $tableCategories (
         ${CategoryFields.id} $idType,
         ${CategoryFields.title} $textType,
-        ${CategoryFields.iconTitle} $textType,
+        ${CategoryFields.iconCodePoint} $integerType,
+        ${CategoryFields.categoriesType} $integerType,
         ${CategoryFields.createdAt} $textType,
         ${CategoryFields.updatedAt} $textType
       )
@@ -41,7 +52,9 @@ class CategoriesDatabases {
 
   Future<Category> create(Category category) async {
     final db = await instance.database;
-    final id = await db.insert(tableCategories, category.toJson());
+    final id = category.id ?? const Uuid().v4().toString();
+    category = await category.copy(id: id);
+    await db.insert(tableCategories, category.toJson());
     return category.copy(id: id);
   }
 

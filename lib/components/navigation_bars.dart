@@ -37,6 +37,7 @@ class _NavigationBarsState extends State<NavigationBars> {
   Widget build(BuildContext context) {
     Widget navigationBar = Focus(
       child: NavigationBar(
+        animationDuration: const Duration(milliseconds: 500),
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {

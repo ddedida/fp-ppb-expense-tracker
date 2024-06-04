@@ -5,213 +5,92 @@ import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
 
 class CategoryAddPage extends StatefulWidget {
   final Category? category;
-  const CategoryAddPage({super.key, this.category});
+  final List<IconData> iconDataList;
+  const CategoryAddPage({super.key, this.category, required this.iconDataList});
 
   @override
   State<CategoryAddPage> createState() => _CategoryAddPageState();
 }
 
 class _CategoryAddPageState extends State<CategoryAddPage> {
-
-  List<IconData> icons = [
-    Icons.home,
-    Icons.sports_soccer,
-    Icons.fastfood,
-    Icons.videogame_asset,
-    Icons.stacked_line_chart,
-    Icons.sports_motorsports,
-    Icons.emoji_transportation,
-    Icons.shopping_cart,
-    Icons.medication,
-    Icons.school,
-    Icons.card_giftcard,
-    Icons.shield,
-    Icons.monetization_on,
-    Icons.favorite,
-    Icons.star,
-  ];
-
-  IconData? selectedIcon;
-
   final _formKey = GlobalKey<FormState>();
   late String _title;
-  late String _iconTitle;
+  late int _iconCodePoint;
 
   @override
   void initState() {
     super.initState();
     if (widget.category == null) {
       _title = '';
-      _iconTitle = 'home';
-      selectedIcon = Icons.home;
+      _iconCodePoint = Icons.add_circle_outline.codePoint;
     } else {
-      _title = widget.category!.title!;
-      _iconTitle = widget.category!.iconTitle!.replaceFirst('Icons.', '');
-      selectedIcon = _getIconDataFromTitle(_iconTitle);
+      _title = widget.category!.title;
+      _iconCodePoint = widget.category!.iconCodePoint;
     }
-  }
-
-  IconData _getIconDataFromTitle(String iconTitle) {
-    // Map icon title to IconData
-    switch (iconTitle) {
-      case 'home':
-        return Icons.home;
-      case 'sports_soccer':
-        return Icons.sports_soccer;
-      case 'fastfood':
-        return Icons.fastfood;
-      case 'videogame_asset':
-        return Icons.videogame_asset;
-      case 'stacked_line_chart':
-        return Icons.stacked_line_chart;
-      case 'sports_motorsports':
-        return Icons.sports_motorsports;
-      case 'emoji_transportation':
-        return Icons.emoji_transportation;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'medication':
-        return Icons.medication;
-      case 'school':
-        return Icons.school;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'shield':
-        return Icons.shield;
-      case 'monetize_on':
-        return Icons.monetization_on;
-      case 'favorite':
-        return Icons.favorite;
-      case 'star':
-        return Icons.star;
-      default:
-        return Icons.home; // default icon
-    }
-  }
-
-  String _getTitleFromIconData(IconData iconData) {
-    // Map IconData to icon title
-    if (iconData == Icons.home) return 'Icons.home';
-    if (iconData == Icons.sports_soccer) return 'Icons.sports_soccer';
-    if (iconData == Icons.fastfood) return 'Icons.fastfood';
-    if (iconData == Icons.videogame_asset) return 'Icons.videogame_asset';
-    if (iconData == Icons.stacked_line_chart) return 'Icons.stacked_line_chart';
-    if (iconData == Icons.sports_motorsports) return 'Icons.sports_motorsports';
-    if (iconData == Icons.emoji_transportation) return 'Icons.emoji_transportation';
-    if (iconData == Icons.shopping_cart) return 'Icons.shopping_cart';
-    if (iconData == Icons.medication) return 'Icons.medication';
-    if (iconData == Icons.school) return 'Icons.school';
-    if (iconData == Icons.card_giftcard) return 'Icons.card_giftcard';
-    if (iconData == Icons.shield) return 'Icons.shield';
-    if (iconData == Icons.monetization_on) return 'Icons.monetization_on';
-    if (iconData == Icons.favorite) return 'Icons.favorite';
-    if (iconData == Icons.star) return 'Icons.star';
-    return 'Icons.home'; // default icon title
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.category == null ? 'Add Category' : 'Edit Category'),
-        titleTextStyle: const TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+    return SafeArea(
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Title',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                cursorHeight: 20.0,
-                initialValue: _title,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                    hintText: 'Enter Title',
-                    hintStyle: TextStyle(fontWeight: FontWeight.normal)
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter title';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _title = value!;
-                },
-              ),
-              const SizedBox(height: 24),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Icon',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 20,
-                    ),
-                    itemCount: icons.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedIcon = icons[index];
-                            _iconTitle = _getTitleFromIconData(selectedIcon!);
-                          });
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: _title,
+                        decoration: const InputDecoration(hintText: 'Title'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter title';
+                          }
+                          return null;
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: selectedIcon == icons[index]
-                                ? Colors.blue
-                                : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
-                            icons[index],
-                            size: 26,
-                            color: selectedIcon == icons[index]
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      );
-                    }
+                        onSaved: (value) {
+                          _title = value!;
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.all(16)),
+                      ),
+                      icon: Icon(IconData(_iconCodePoint,
+                          fontFamily: 'MaterialIcons')),
+                      onPressed: () async {
+                        final icon = await showDialog<IconData>(
+                            context: context,
+                            builder: (context) => IconPicker(widget: widget));
+                        if (icon != null) {
+                          setState(() {
+                            _iconCodePoint = icon.codePoint;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                height: 48.0,
-                child: ElevatedButton(
-                  onPressed: () {
-                    addOrUpdateCategory();
-                  },
-                  child: Text(
-                    widget.category == null ? 'Add' : 'Update',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        addOrUpdateCategory();
+                      },
+                      child: Text(widget.category == null ? 'Add' : 'Update'),
                     ),
                   ),
-                ),
+                ],
               )
             ],
           ),
@@ -223,7 +102,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
   void addOrUpdateCategory() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      if (selectedIcon == null) {
+      if (_iconCodePoint == Icons.add_circle_outline.codePoint) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select an icon')),
         );
@@ -241,7 +120,8 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
   Future addCategory() async {
     final category = Category(
       title: _title,
-      iconTitle: _iconTitle,
+      iconCodePoint: _iconCodePoint,
+      categoriesType: 0,
       createdAt: DateTime.now().toString(),
       updatedAt: DateTime.now().toString(),
     );
@@ -250,12 +130,47 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
   }
 
   Future updateCategory() async {
-    final category = widget.category!.copy(
+    final category = await widget.category!.copy(
       title: _title,
-      iconTitle: _iconTitle,
+      iconCodePoint: _iconCodePoint,
       updatedAt: DateTime.now().toString(),
     );
 
     await CategoriesDatabases.instance.update(category);
+  }
+}
+
+class IconPicker extends StatelessWidget {
+  const IconPicker({
+    super.key,
+    required this.widget,
+  });
+
+  final CategoryAddPage widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: const Text('Pick an icon'),
+      children: [
+        SingleChildScrollView(
+          child: SizedBox(
+            height: 400,
+            width: double.maxFinite,
+            child: GridView.count(
+              crossAxisCount: 4, // change this number as needed
+              children: widget.iconDataList.map((iconData) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(iconData);
+                  },
+                  child: Icon(iconData),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
