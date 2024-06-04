@@ -5,6 +5,9 @@ import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/home_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/user_login_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/user_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/user_register_page.dart';
 
 import 'constant.dart';
 import 'pages/expense_add_page.dart';
@@ -62,6 +65,9 @@ class _MyAppState extends State<MyApp> {
         '/budget': (context) => const BudgetPage(),
         '/savings': (context) => const SavingsPage(),
         '/savings/add': (context) => const SavingsAddPage(),
+        '/user': (context) => const UserPage(),
+        '/user/login': (context) => const UserLoginPage(),
+        '/user/register': (context) => const UserRegisterPage(),
       },
       initialRoute: '/',
       home: const HomePage(),

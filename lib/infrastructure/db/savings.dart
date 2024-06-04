@@ -53,7 +53,7 @@ class SavingsDatabases {
 
   Future<Savings> create(Savings savings) async {
     final db = await instance.database;
-    final id = await savings.id ?? const Uuid().v4().toString();
+    final id = savings.id ?? const Uuid().v4().toString();
     savings = await savings.copy(id: id);
     await db.insert(tableSavings, savings.toJson());
     return savings.copy(id: id);

@@ -67,7 +67,7 @@ class _SavingsAddPageState extends State<SavingsAddPage> {
                                   child: Center(
                                     child: Text(
                                       emoji,
-                                      style: TextStyle(fontSize: 24),
+                                      style: const TextStyle(fontSize: 24),
                                     ),
                                   ),
                                 ),
@@ -97,7 +97,7 @@ class _SavingsAddPageState extends State<SavingsAddPage> {
                     child: Center(
                       child: Text(
                         _emoji,
-                        style: TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 24),
                       ),
                     ),
                   ),
@@ -159,7 +159,7 @@ class _SavingsAddPageState extends State<SavingsAddPage> {
                   Navigator.pop(context, savings);
                 }
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),

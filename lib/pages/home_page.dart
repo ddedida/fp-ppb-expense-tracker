@@ -4,6 +4,7 @@ import 'package:fp_ppb_expense_tracker/constant.dart';
 import 'package:fp_ppb_expense_tracker/pages/budget_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/user_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage>
       case ScreenSelected.budget:
         return const BudgetPage();
       case ScreenSelected.user:
-        return const Center(child: Text('User'));
+        return const UserPage();
       default:
         return const SizedBox();
     }
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expense Tracker'),
+        title: const Text('Expense Tracker'),
         centerTitle: true,
       ),
       body: createScreen(ScreenSelected.values[selectedIndex]),

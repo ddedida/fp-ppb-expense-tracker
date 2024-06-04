@@ -33,8 +33,7 @@ enum ScreenSelected {
   expense(1),
   category(2),
   budget(3),
-  savings(4),
-  user(5);
+  user(4);
 
   const ScreenSelected(this.value);
   final int value;

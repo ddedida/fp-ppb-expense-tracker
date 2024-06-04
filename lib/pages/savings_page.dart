@@ -4,7 +4,7 @@ import 'package:fp_ppb_expense_tracker/model/savings.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_add_page.dart';
 
 class SavingsPage extends StatefulWidget {
-  const SavingsPage({Key? key});
+  const SavingsPage({super.key});
 
   @override
   State<SavingsPage> createState() => _SavingsPageState();

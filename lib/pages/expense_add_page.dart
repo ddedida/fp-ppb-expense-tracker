@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
@@ -76,7 +75,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   _amount = double.parse(value!);
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               InputDatePickerFormField(
                 initialDate: _date,
                 firstDate: DateTime(1999),
