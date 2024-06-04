@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/components/budget_form.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/budget.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
+import 'package:fp_ppb_expense_tracker/model/budget.dart';
 import 'package:fp_ppb_expense_tracker/model/categories.dart';
-import 'package:fp_ppb_expense_tracker/widgets/budget_form_widget.dart';
+import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 
 class BudgetPage extends StatefulWidget {
   const BudgetPage({super.key});
@@ -12,12 +16,47 @@ class BudgetPage extends StatefulWidget {
 
 class _BudgetPageState extends State<BudgetPage> {
   late List<Category> categories;
+  late List<Category> categoriesBudget;
+  late List<Budget> budgets;
+  late List<Expense> expenses;
+  late Set<String> budgetCategoryIds;
   bool isLoading = false;
+  double totalBudget = 0;
+  double totalSpent = 0;
+  double remaining = 0;
 
   Future refreshData() async {
     setState(() => isLoading = true);
 
     categories = await CategoriesDatabases.instance.readAllCategories();
+    budgets = await BudgetDatabase.instance.readAllBudgets();
+    expenses = await ExpensesDatabases.instance.readAllExpenses();
+
+    if (budgets.isNotEmpty) {
+      totalBudget = budgets.fold(0, (sum, budget) => sum + budget.amount);
+    }
+
+    if (expenses.isNotEmpty) {
+      totalSpent = expenses.fold(0, (sum, expense) => sum + expense.amount);
+    }
+
+    remaining = totalBudget - totalSpent;
+
+    Set<String> budgetCategoryIds = {};
+    for (Budget budget in budgets) {
+      budgetCategoryIds.add(budget.categoryId!);
+    }
+
+    categoriesBudget = [];
+    for (Category category in categories) {
+      if (budgetCategoryIds.contains(category.id.toString())) {
+        categoriesBudget.add(category);
+      }
+    }
+
+    for (Category category in categoriesBudget) {
+      categories.remove(category);
+    }
 
     setState(() => isLoading = false);
   }
@@ -35,34 +74,110 @@ class _BudgetPageState extends State<BudgetPage> {
     refreshData();
   }
 
-  void showAlertDialog(BuildContext context, Category category) {
-    showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => BudgetFormWidget(
-            date: '2024-05-25', categoryId: category.id.toString()));
+  void showAlertDialog(BuildContext context, Category category) async {
+    await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => BudgetFormWidget(
+        date: '2024-05-25',
+        categoryId: category.id.toString(),
+      ),
+    );
+
+    refreshData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: isLoading
-          ? const CircularProgressIndicator()
-          : categories.isEmpty
-              ? const Text('No Categories')
-              : Column(
-                  children: <Widget>[
-                    const Text('Limits'),
-                    Expanded(child: buildCard()),
-                  ],
-                ),
-    );
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : categories.isEmpty && categoriesBudget.isEmpty
+                ? const Text('No Categories')
+                : DefaultTabController(
+                    length: 2,
+                    child: Scaffold(
+                      body: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: [
+                                  const Text(
+                                    'Total Budget',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text('$totalBudget'),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Text(
+                                    'Total Spent',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text('$totalSpent'),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Text(
+                                    'Remaining',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text('$remaining'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          SizedBox(
+                            height: 50,
+                            child: AppBar(
+                              bottom: const TabBar(
+                                tabs: [
+                                  Tab(
+                                    text: "Budgeted Categories",
+                                  ),
+                                  Tab(
+                                    text: "Non Budgeted Categories",
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: <Widget>[
+                                Container(
+                                    child: categoriesBudget.isEmpty
+                                        ? const Center(
+                                            child: Text('No Categories'))
+                                        : buildCard(categoriesBudget)),
+                                Container(
+                                    child: categories.isEmpty
+                                        ? const Center(
+                                            child: Text('No Categories'))
+                                        : buildCard(categories)),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )));
   }
 
-  Widget buildCard() => ListView.builder(
+  Widget buildCard(List<Category> categories) => ListView.builder(
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final category = categories[index];
-          IconData iconData = IconData(category.iconCodePoint);
+          IconData iconData =
+              IconData(category.iconCodePoint, fontFamily: 'MaterialIcons');
 
           return Card(
             margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -79,7 +194,7 @@ class _BudgetPageState extends State<BudgetPage> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        category.title ?? 'No title',
+                        category.title,
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.w600,

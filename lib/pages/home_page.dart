@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/components/navigation_bars.dart';
 import 'package:fp_ppb_expense_tracker/constant.dart';
 import 'package:fp_ppb_expense_tracker/pages/budget_page.dart';
-import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
-import 'package:fp_ppb_expense_tracker/pages/savings_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/expense_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,8 +50,8 @@ class _HomePageState extends State<HomePage>
         return const ExpensePage();
       case ScreenSelected.category:
         return const CategoryPage();
-      case ScreenSelected.savings:
-        return const SavingsPage();
+      case ScreenSelected.budget:
+        return const BudgetPage();
       case ScreenSelected.user:
         return const Center(child: Text('User'));
       default:

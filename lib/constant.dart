@@ -61,11 +61,11 @@ const List<NavigationDestination> appBarDestinations = [
     label: 'Budget',
     selectedIcon: Icon(Icons.paid_rounded),
   ),
-  NavigationDestination(
-    icon: Icon(Icons.savings_outlined),
-    label: 'Savings',
-    selectedIcon: Icon(Icons.savings_rounded),
-  ),
+  // NavigationDestination(
+  //   icon: Icon(Icons.savings_outlined),
+  //   label: 'Savings',
+  //   selectedIcon: Icon(Icons.savings_rounded),
+  // ),
   NavigationDestination(
     icon: Icon(Icons.person_outlined),
     label: 'User',

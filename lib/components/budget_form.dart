@@ -67,6 +67,12 @@ class _BudgetFormWidgetState extends State<BudgetFormWidget> {
       ),
       actions: <Widget>[
         TextButton(
+          child: const Text('Clear'),
+          onPressed: () {
+            deleteBudget();
+          },
+        ),
+        TextButton(
           child: const Text('Save'),
           onPressed: () {
             addOrUpdateBudget();
@@ -126,5 +132,12 @@ class _BudgetFormWidgetState extends State<BudgetFormWidget> {
     );
 
     await BudgetDatabase.instance.create(budget);
+  }
+
+  Future deleteBudget() async {
+    if (budget != null) {
+      await BudgetDatabase.instance.delete(budget!.id!);
+    }
+    Navigator.pop(context);
   }
 }

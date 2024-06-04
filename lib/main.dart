@@ -5,6 +5,7 @@ import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/home_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_page.dart';
+
 import 'constant.dart';
 import 'pages/expense_add_page.dart';
 import 'pages/expense_page.dart';
@@ -58,6 +59,7 @@ class _MyAppState extends State<MyApp> {
         '/category': (context) => const CategoryPage(),
         '/category/add': (context) =>
             const CategoryAddPage(iconDataList: iconDataList),
+        '/budget': (context) => const BudgetPage(),
         '/savings': (context) => const SavingsPage(),
         '/savings/add': (context) => const SavingsAddPage(),
       },
