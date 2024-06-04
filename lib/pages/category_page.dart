@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
 import '../model/categories.dart';
 import '../infrastructure/db/categories.dart';
 
@@ -130,10 +131,10 @@ class _CategoryPageState extends State<CategoryPage> {
                 IconButton(
                   icon: const Icon(Icons.edit, size: 24),
                   onPressed: () async {
-                    await Navigator.of(context).pushNamed(
-                      '/category/add',
-                      arguments: category,
-                    );
+                    await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CategoryAddPage(category: category),
+                    ));
+                    refreshCategories();
                   },
                 ),
                 IconButton(

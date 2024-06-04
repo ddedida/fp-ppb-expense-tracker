@@ -46,7 +46,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
       selectedIcon = Icons.home;
     } else {
       _title = widget.category!.title!;
-      _iconTitle = widget.category!.iconTitle!;
+      _iconTitle = widget.category!.iconTitle!.replaceFirst('Icons.', '');
       selectedIcon = _getIconDataFromTitle(_iconTitle);
     }
   }
@@ -220,6 +220,24 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
     );
   }
 
+  void addOrUpdateCategory() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (selectedIcon == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select an icon')),
+        );
+        return;
+      }
+      if (widget.category == null) {
+        await addCategory();
+      } else {
+        await updateCategory();
+      }
+      Navigator.of(context).pop();
+    }
+  }
+
   Future addCategory() async {
     final category = Category(
       title: _title,
@@ -239,23 +257,5 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
     );
 
     await CategoriesDatabases.instance.update(category);
-  }
-
-  void addOrUpdateCategory() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (selectedIcon == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select an icon')),
-        );
-        return;
-      }
-      if (widget.category == null) {
-        await addCategory();
-      } else {
-        await updateCategory();
-      }
-      Navigator.of(context).pop();
-    }
   }
 }
