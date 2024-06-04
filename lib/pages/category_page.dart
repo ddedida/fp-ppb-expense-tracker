@@ -55,7 +55,7 @@ class _CategoryPageState extends State<CategoryPage> {
       case 'Icons.star':
         return Icons.star;
       default:
-        return Icons.help; // default icon
+        return Icons.home; // default icon
     }
   }
 

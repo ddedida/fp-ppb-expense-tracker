@@ -85,7 +85,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
       case 'star':
         return Icons.star;
       default:
-        return Icons.help; // default icon
+        return Icons.home; // default icon
     }
   }
 
@@ -106,7 +106,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
     if (iconData == Icons.monetization_on) return 'Icons.monetization_on';
     if (iconData == Icons.favorite) return 'Icons.favorite';
     if (iconData == Icons.star) return 'Icons.star';
-    return 'Icons.help'; // default icon title
+    return 'Icons.home'; // default icon title
   }
 
   @override
