@@ -32,7 +32,7 @@ class _BudgetFormWidgetState extends State<BudgetFormWidget> {
     );
 
     if (budget == null) {
-      _budgetController = TextEditingController(text: '0.0');
+      _budgetController = TextEditingController();
     } else {
       _budgetController = TextEditingController(text: '${budget!.amount}');
     }
@@ -85,6 +85,12 @@ class _BudgetFormWidgetState extends State<BudgetFormWidget> {
   Widget buildAmount() => TextFormField(
       controller: _budgetController,
       maxLines: 1,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+        hintText: '0.0',
+        hintStyle: TextStyle(fontWeight: FontWeight.normal),
+      ),
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -93,6 +99,11 @@ class _BudgetFormWidgetState extends State<BudgetFormWidget> {
         if (double.tryParse(value) == null) {
           return 'Please enter a valid number';
         }
+
+        if (double.parse(value) < 0) {
+          return 'Please enter a valid number';
+        }
+
         return null;
       });
 

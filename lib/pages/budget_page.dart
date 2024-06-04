@@ -14,7 +14,9 @@ class BudgetPage extends StatefulWidget {
   State<BudgetPage> createState() => _BudgetPageState();
 }
 
-class _BudgetPageState extends State<BudgetPage> {
+class _BudgetPageState extends State<BudgetPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   late List<Category> categories;
   late List<Category> categoriesBudget;
   late List<Budget> budgets;
@@ -27,6 +29,9 @@ class _BudgetPageState extends State<BudgetPage> {
 
   Future refreshData() async {
     setState(() => isLoading = true);
+
+    totalBudget = 0;
+    totalSpent = 0;
 
     categories = await CategoriesDatabases.instance.readAllCategories();
     budgets = await BudgetDatabase.instance.readAllBudgets();
@@ -63,6 +68,7 @@ class _BudgetPageState extends State<BudgetPage> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     CategoriesDatabases.instance.close();
 
     super.dispose();
@@ -71,6 +77,7 @@ class _BudgetPageState extends State<BudgetPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     refreshData();
   }
 
@@ -92,55 +99,79 @@ class _BudgetPageState extends State<BudgetPage> {
         child: isLoading
             ? const CircularProgressIndicator()
             : categories.isEmpty && categoriesBudget.isEmpty
-                ? const Text('No Categories')
+                ? const Text('No categories')
                 : DefaultTabController(
                     length: 2,
                     child: Scaffold(
                       body: Column(
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Column(
-                                children: [
-                                  const Text(
-                                    'Total Budget',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                          SizedBox(
+                            height: 60.0,
+                            child: budgets.isEmpty
+                                ? const Center(
+                                    child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline,
+                                      ),
+                                      SizedBox(
+                                        height: 4.0,
+                                      ),
+                                      Text('No budget set yet')
+                                    ],
+                                  ))
+                                : Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              'Total Budget',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text('$totalBudget'),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              'Total Spent',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text('$totalSpent'),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              'Remaining',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text('$remaining'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Text('$totalBudget'),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text(
-                                    'Total Spent',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text('$totalSpent'),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text(
-                                    'Remaining',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text('$remaining'),
-                                ],
-                              ),
-                            ],
                           ),
                           const SizedBox(
-                            height: 30,
+                            height: 10,
                           ),
                           SizedBox(
                             height: 50,
                             child: AppBar(
-                              bottom: const TabBar(
-                                tabs: [
+                              bottom: TabBar(
+                                controller: _tabController,
+                                tabs: const [
                                   Tab(
                                     text: "Budgeted Categories",
                                   ),
@@ -153,16 +184,17 @@ class _BudgetPageState extends State<BudgetPage> {
                           ),
                           Expanded(
                             child: TabBarView(
+                              controller: _tabController,
                               children: <Widget>[
                                 Container(
                                     child: categoriesBudget.isEmpty
                                         ? const Center(
-                                            child: Text('No Categories'))
+                                            child: Text('No category budgets'))
                                         : buildCard(categoriesBudget)),
                                 Container(
                                     child: categories.isEmpty
                                         ? const Center(
-                                            child: Text('No Categories'))
+                                            child: Text('No categories'))
                                         : buildCard(categories)),
                               ],
                             ),

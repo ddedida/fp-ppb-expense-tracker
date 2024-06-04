@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
-import 'package:fp_ppb_expense_tracker/model/categories.dart';
-import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
 import 'package:fp_ppb_expense_tracker/constant.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
+import 'package:fp_ppb_expense_tracker/model/categories.dart';
+import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_detail_page.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -21,9 +21,6 @@ class _CategoryPageState extends State<CategoryPage> {
 
     categories = await CategoriesDatabases.instance.readAllCategories();
 
-    for (Category cat in categories) {
-      print(cat.id);
-    }
     setState(() => isLoading = false);
   }
 
@@ -62,8 +59,7 @@ class _CategoryPageState extends State<CategoryPage> {
               builder: (context) {
                 return Padding(
                   padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom
-                  ),
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -89,10 +85,7 @@ class _CategoryPageState extends State<CategoryPage> {
             child: ListTile(
               title: Text(category.title),
               trailing: Icon(
-                IconData(
-                  category.iconCodePoint,
-                  fontFamily: 'MaterialIcons'
-                ),
+                IconData(category.iconCodePoint, fontFamily: 'MaterialIcons'),
               ),
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(

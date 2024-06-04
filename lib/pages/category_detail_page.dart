@@ -70,7 +70,6 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
           IconButton(
             icon: const Icon(Icons.delete, size: 24),
             onPressed: () async {
-              print(widget.category!.id);
               await CategoriesDatabases.instance.delete(widget.category!.id!);
               Navigator.of(context).pop();
             },
