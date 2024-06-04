@@ -28,7 +28,7 @@ class CategoryFields {
 }
 
 class Category {
-  final String? id;
+  final int? id;
   final String title;
   final int iconCodePoint;
   final int categoriesType;
@@ -45,7 +45,7 @@ class Category {
   });
 
   Future<Category> copy({
-    String? id,
+    int? id,
     String? title,
     int? iconCodePoint,
     int? categoriesType,
@@ -63,7 +63,7 @@ class Category {
   }
 
   static Category fromJson(Map<String, Object?> json) => Category(
-        id: json[CategoryFields.id] as String?,
+        id: json[CategoryFields.id] as int?,
         title: json[CategoryFields.title] as String,
         iconCodePoint: json[CategoryFields.iconCodePoint] as int,
         categoriesType: json[CategoryFields.categoriesType] as int,

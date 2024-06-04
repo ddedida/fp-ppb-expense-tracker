@@ -3,6 +3,7 @@ import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
 import 'package:fp_ppb_expense_tracker/model/categories.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
 import 'package:fp_ppb_expense_tracker/constant.dart';
+import 'package:fp_ppb_expense_tracker/pages/category_detail_page.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -20,6 +21,9 @@ class _CategoryPageState extends State<CategoryPage> {
 
     categories = await CategoriesDatabases.instance.readAllCategories();
 
+    for (Category cat in categories) {
+      print(cat.id);
+    }
     setState(() => isLoading = false);
   }
 
@@ -52,12 +56,22 @@ class _CategoryPageState extends State<CategoryPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               useSafeArea: true,
               builder: (context) {
-                return const SizedBox(
-                    height: 170,
-                    child: CategoryAddPage(iconDataList: iconDataList));
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CategoryAddPage(iconDataList: iconDataList),
+                    ],
+                  ),
+                );
               }).then((_) => refreshCategories());
         },
         child: const Icon(Icons.add),
@@ -71,11 +85,21 @@ class _CategoryPageState extends State<CategoryPage> {
           final category = categories[index];
 
           return Card(
-            margin: const EdgeInsets.all(4.0),
+            margin: const EdgeInsets.all(8),
             child: ListTile(
               title: Text(category.title),
-              trailing: Icon(IconData(category.iconCodePoint,
-                  fontFamily: 'MaterialIcons')),
+              trailing: Icon(
+                IconData(
+                  category.iconCodePoint,
+                  fontFamily: 'MaterialIcons'
+                ),
+              ),
+              onTap: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CategoryDetailPage(category: category),
+                ));
+                refreshCategories();
+              },
             ),
           );
         },

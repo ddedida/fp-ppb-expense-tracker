@@ -37,45 +37,63 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: _title,
-                        decoration: const InputDecoration(hintText: 'Title'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter title';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _title = value!;
-                        },
+                    const SizedBox(height: 16.0),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Category',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    IconButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            const EdgeInsets.all(16)),
-                      ),
-                      icon: Icon(IconData(_iconCodePoint,
-                          fontFamily: 'MaterialIcons')),
-                      onPressed: () async {
-                        final icon = await showDialog<IconData>(
-                            context: context,
-                            builder: (context) => IconPicker(widget: widget));
-                        if (icon != null) {
-                          setState(() {
-                            _iconCodePoint = icon.codePoint;
-                          });
-                        }
-                      },
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: _title,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                              hintText: 'Enter Title',
+                              hintStyle: TextStyle(fontWeight: FontWeight.normal)
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter category title';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _title = value!;
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                const EdgeInsets.all(16)),
+                          ),
+                          icon: Icon(IconData(_iconCodePoint,
+                              fontFamily: 'MaterialIcons')),
+                          onPressed: () async {
+                            final icon = await showDialog<IconData>(
+                                context: context,
+                                builder: (context) => IconPicker(widget: widget));
+                            if (icon != null) {
+                              setState(() {
+                                _iconCodePoint = icon.codePoint;
+                              });
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -91,7 +109,8 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
                     ),
                   ),
                 ],
-              )
+              ),
+              const SizedBox(height: 16)
             ],
           ),
         ),

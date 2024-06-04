@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:uuid/uuid.dart';
 import '../../model/categories.dart';
+// import 'package:uuid/uuid.dart';
 
 class CategoriesDatabases {
   static final CategoriesDatabases instance = CategoriesDatabases._init();
@@ -34,7 +34,7 @@ class CategoriesDatabases {
   }
 
   Future _createDB(Database db, int version) async {
-    const idType = 'TEXT PRIMARY KEY';
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
     const integerType = 'INTEGER NOT NULL';
 
@@ -52,9 +52,7 @@ class CategoriesDatabases {
 
   Future<Category> create(Category category) async {
     final db = await instance.database;
-    final id = category.id ?? const Uuid().v4().toString();
-    category = await category.copy(id: id);
-    await db.insert(tableCategories, category.toJson());
+    final id = await db.insert(tableCategories, category.toJson());
     return category.copy(id: id);
   }
 
