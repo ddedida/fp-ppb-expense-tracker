@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 import '../../model/expenses.dart';
 
@@ -122,13 +124,13 @@ class ExpensesDatabases {
     return result.map((json) => Expense.fromJson(json)).toList();
   }
 
-  Future<List<Expense>> readAllExpensesByCategory(String category) async {
+  Future<List<Expense>> readAllExpensesByCategory(int typeId) async {
     final db = await instance.database;
 
     final result = await db.query(
       tableExpenses,
-      where: '${ExpenseFields.categoryId} = ?',
-      whereArgs: [category],
+      where: 'typeId = ?',
+      whereArgs: [typeId],
     );
 
     return result.map((json) => Expense.fromJson(json)).toList();
