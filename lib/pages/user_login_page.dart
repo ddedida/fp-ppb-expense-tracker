@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/auth.dart';
@@ -43,7 +42,7 @@ class UserLoginPageState extends State<UserLoginPage> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString() + "hehe"),
+            content: Text("${e}hehe"),
           ),
         );
       }

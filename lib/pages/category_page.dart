@@ -32,16 +32,17 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   void dispose() {
-    CategoriesDatabases.instance.close();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Categories'),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Center(
           child: isLoading
               ? const CircularProgressIndicator()
@@ -81,11 +82,12 @@ class _CategoryPageState extends State<CategoryPage> {
           final category = categories[index];
 
           return Card(
-            margin: const EdgeInsets.all(8),
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
             child: ListTile(
               title: Text(category.title),
               trailing: Icon(
                 IconData(category.iconCodePoint, fontFamily: 'MaterialIcons'),
+                size: 32,
               ),
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/services/shared_preferences.dart';
+import 'package:fp_ppb_expense_tracker/model/settings.dart';
 import 'package:fp_ppb_expense_tracker/pages/budget_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/category_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/home_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_add_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/savings_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/settings_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/user_login_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/user_page.dart';
 import 'package:fp_ppb_expense_tracker/pages/user_register_page.dart';
@@ -25,23 +28,36 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late AppSettings settings;
   bool useMaterial3 = true;
   ThemeMode themeMode = ThemeMode.system;
   ColorSeed colorSelected = ColorSeed.baseColor;
   ColorScheme? imageColorScheme = const ColorScheme.light();
   ColorSelectionMethod colorSelectionMethod = ColorSelectionMethod.colorSeed;
 
-  bool get useLightMode => switch (themeMode) {
-        ThemeMode.system =>
-          View.of(context).platformDispatcher.platformBrightness ==
-              Brightness.light,
-        ThemeMode.light => true,
-        ThemeMode.dark => false
-      };
-
-  void handleBrightnessChange(bool useLightMode) {
+  Future handleSettingChange(AppSettings settings) async {
+    await SharedPreference.saveSetting(settings);
     setState(() {
-      themeMode = useLightMode ? ThemeMode.light : ThemeMode.dark;
+      themeMode = settings.themeMode;
+    });
+  }
+
+  Future fetchSetting() async {
+    settings = await SharedPreference.getSetting();
+    setState(() {
+      themeMode = settings.themeMode;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSetting();
+  }
+
+  void handleBrightnessChange(ThemeMode themeModes) {
+    setState(() {
+      themeMode = themeModes;
     });
   }
 
@@ -68,6 +84,8 @@ class _MyAppState extends State<MyApp> {
         '/user': (context) => const UserPage(),
         '/user/login': (context) => const UserLoginPage(),
         '/user/register': (context) => const UserRegisterPage(),
+        '/settings': (context) => SettingPage(
+            settings: settings, onThemeModeChange: handleBrightnessChange),
       },
       initialRoute: '/',
       home: const HomePage(),

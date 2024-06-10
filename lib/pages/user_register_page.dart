@@ -10,9 +10,9 @@ class UserRegisterPage extends StatefulWidget {
 class _UserRegisterPageState extends State<UserRegisterPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: const Text('User Register Page'),
+        child: Text('User Register Page'),
       ),
     );
   }

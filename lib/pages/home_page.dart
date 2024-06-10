@@ -63,10 +63,6 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Expense Tracker'),
-        centerTitle: true,
-      ),
       body: createScreen(ScreenSelected.values[selectedIndex]),
       bottomNavigationBar: NavigationBars(
         selectedIndex: selectedIndex,

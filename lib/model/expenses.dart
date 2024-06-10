@@ -73,6 +73,17 @@ class Expense {
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
+  static Expense empty() => Expense(
+        id: null,
+        title: '',
+        amount: 0.0,
+        date: DateTime.now(),
+        typeId: 0,
+        categoryId: '',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
   static Expense fromJson(Map<String, Object?> json) => Expense(
         id: json[ExpenseFields.id] as int,
         title: json[ExpenseFields.title] as String,

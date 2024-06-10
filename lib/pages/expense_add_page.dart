@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
+import 'package:fp_ppb_expense_tracker/model/categories.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
 
 class ExpenseAddPage extends StatefulWidget {
   final Expense? expense;
-
   const ExpenseAddPage({super.key, this.expense});
-
   @override
   State<ExpenseAddPage> createState() => _ExpenseAddPageState();
 }
@@ -26,19 +26,94 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
       _title = '';
       _amount = 0.0;
       _date = DateTime.now();
-      _typeId = 0;
-      _categoryId = '';
+      _typeId = 1;
+      _categoryId = "1";
     } else {
-      _title = widget.expense!.title!;
-      _amount = widget.expense!.amount;
-      _date = widget.expense!.date;
-      _typeId = widget.expense!.typeId;
-      _categoryId = widget.expense!.categoryId!;
+      final expense = widget.expense!;
+      _title = expense.title!;
+      _amount = expense.amount;
+      _date = expense.date;
+      _typeId = expense.typeId;
+      _categoryId = expense.categoryId!;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Future addExpense() async {
+      final expense = Expense(
+        title: _title,
+        amount: _amount,
+        date: _date,
+        typeId: _typeId,
+        categoryId: _categoryId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await ExpensesDatabases.instance.create(expense);
+    }
+
+    Future updateExpense() async {
+      final expense = widget.expense!.copy(
+        title: _title,
+        amount: _amount,
+        date: _date,
+        typeId: _typeId,
+        categoryId: _categoryId,
+        updatedAt: DateTime.now(),
+      );
+
+      ExpensesDatabases.instance.update(expense);
+    }
+
+    void addOrUpdateExpense() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        if (widget.expense == null) {
+          await addExpense();
+        } else {
+          await updateExpense();
+        }
+        Navigator.of(context).pop();
+      }
+    }
+
+    Widget buildCategoryDropdown() {
+      return FutureBuilder<List<Category>>(
+        future: CategoriesDatabases.instance.readAllCategories(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final categories = snapshot.data!;
+            if (_categoryId == "" && categories.isNotEmpty) {
+              _categoryId = categories[0].id.toString();
+            }
+            return DropdownButtonFormField<String>(
+              value: _categoryId,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _categoryId = newValue ?? "1";
+                });
+              },
+              items: categories.map(
+                (category) {
+                  return DropdownMenuItem(
+                    value: category.id.toString(),
+                    child: Text(
+                      "${category.title} ${category.id}",
+                    ),
+                  );
+                },
+              ).toList(),
+              decoration: const InputDecoration(labelText: 'Category'),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.expense == null ? 'Add Expense' : 'Edit Expense'),
@@ -84,32 +159,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   _date = value;
                 },
               ),
-              TextFormField(
-                initialValue: _typeId.toString(),
-                decoration: const InputDecoration(labelText: 'Type ID'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter type ID';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _typeId = int.parse(value!);
-                },
-              ),
-              TextFormField(
-                initialValue: _categoryId,
-                decoration: const InputDecoration(labelText: 'Category ID'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter category ID';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _categoryId = value!;
-                },
-              ),
+              buildCategoryDropdown(),
               ElevatedButton(
                 onPressed: () {
                   addOrUpdateExpense();
@@ -121,44 +171,5 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
         ),
       ),
     );
-  }
-
-  Future addExpense() async {
-    final expense = Expense(
-      title: _title,
-      amount: _amount,
-      date: _date,
-      typeId: _typeId,
-      categoryId: _categoryId,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-
-    await ExpensesDatabases.instance.create(expense);
-  }
-
-  Future updateExpense() async {
-    final expense = widget.expense!.copy(
-      title: _title,
-      amount: _amount,
-      date: _date,
-      typeId: _typeId,
-      categoryId: _categoryId,
-      updatedAt: DateTime.now(),
-    );
-
-    await ExpensesDatabases.instance.update(expense);
-  }
-
-  void addOrUpdateExpense() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (widget.expense == null) {
-        await addExpense();
-      } else {
-        await updateExpense();
-      }
-      Navigator.of(context).pop();
-    }
   }
 }

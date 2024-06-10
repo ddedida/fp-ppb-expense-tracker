@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:fp_ppb_expense_tracker/infrastructure/services/secure_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/shared_preferences.dart';
@@ -70,7 +68,6 @@ class AuthMethods {
       throw Exception('Failed to get profile');
     }
 
-    print(response.data['data']);
     User user = User.fromJson(response.data['data'] as Map<String, dynamic>);
     await SharedPreference.saveUser(user);
   }

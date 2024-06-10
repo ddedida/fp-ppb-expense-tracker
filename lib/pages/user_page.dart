@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/auth.dart';
-import 'package:fp_ppb_expense_tracker/infrastructure/services/secure_storage.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/shared_preferences.dart';
 import 'package:fp_ppb_expense_tracker/model/user.dart';
 
@@ -65,6 +64,17 @@ class _UserPageState extends State<UserPage> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('User'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

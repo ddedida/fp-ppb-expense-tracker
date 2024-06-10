@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fp_ppb_expense_tracker/components/budget_form.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/budget.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
@@ -19,7 +21,7 @@ class _BudgetPageState extends State<BudgetPage>
   late TabController _tabController;
   late List<Category> categories;
   late List<Category> categoriesBudget;
-  late List<Budget> budgets;
+  late List<Budget> budgets = [];
   late List<Expense> expenses;
   late Set<String> budgetCategoryIds;
   bool isLoading = false;
@@ -29,12 +31,12 @@ class _BudgetPageState extends State<BudgetPage>
 
   Future refreshData() async {
     setState(() => isLoading = true);
+    budgets = await BudgetDatabase.instance.readAllBudgets();
 
     totalBudget = 0;
     totalSpent = 0;
 
     categories = await CategoriesDatabases.instance.readAllCategories();
-    budgets = await BudgetDatabase.instance.readAllBudgets();
     expenses = await ExpensesDatabases.instance.readAllExpenses();
 
     if (budgets.isNotEmpty) {
@@ -69,7 +71,6 @@ class _BudgetPageState extends State<BudgetPage>
   @override
   void dispose() {
     _tabController.dispose();
-    CategoriesDatabases.instance.close();
 
     super.dispose();
   }
@@ -95,113 +96,106 @@ class _BudgetPageState extends State<BudgetPage>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : categories.isEmpty && categoriesBudget.isEmpty
-                ? const Text('No categories')
-                : DefaultTabController(
-                    length: 2,
-                    child: Scaffold(
-                      body: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 60.0,
-                            child: budgets.isEmpty
-                                ? const Center(
-                                    child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.error_outline,
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          child: budgets.isEmpty
+              ? const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Text('No budget set yet')
+                  ],
+                )
+              : isLoading
+                  ? const CircularProgressIndicator()
+                  : (categories.isEmpty && categoriesBudget.isEmpty)
+                      ? const Text('No categories')
+                      : DefaultTabController(
+                          length: 2,
+                          child: SafeArea(
+                            child: Scaffold(
+                                appBar: AppBar(
+                                  bottom: TabBar(
+                                    controller: _tabController,
+                                    tabs: const [
+                                      Tab(
+                                        text: "Budgeted Categories",
                                       ),
-                                      SizedBox(
-                                        height: 4.0,
-                                      ),
-                                      Text('No budget set yet')
+                                      Tab(
+                                        text: "Non Budgeted Categories",
+                                      )
                                     ],
-                                  ))
-                                : Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              'Total Budget',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text('$totalBudget'),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              'Total Spent',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text('$totalSpent'),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              'Remaining',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text('$remaining'),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            child: AppBar(
-                              bottom: TabBar(
-                                controller: _tabController,
-                                tabs: const [
-                                  Tab(
-                                    text: "Budgeted Categories",
+                                  flexibleSpace: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Total Budget',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text('$totalBudget'),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Total Spent',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text('$totalSpent'),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Remaining',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text('$remaining'),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  Tab(
-                                    text: "Non Budgeted Categories",
-                                  )
-                                ],
-                              ),
-                            ),
+                                ),
+                                body: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TabBarView(
+                                    controller: _tabController,
+                                    children: <Widget>[
+                                      Container(
+                                          child: categoriesBudget.isEmpty
+                                              ? const Center(
+                                                  child: Text(
+                                                      'No category budgets'))
+                                              : buildCard(categoriesBudget)),
+                                      Container(
+                                          child: categories.isEmpty
+                                              ? const Center(
+                                                  child: Text('No categories'))
+                                              : buildCard(categories)),
+                                    ],
+                                  ),
+                                )),
                           ),
-                          Expanded(
-                            child: TabBarView(
-                              controller: _tabController,
-                              children: <Widget>[
-                                Container(
-                                    child: categoriesBudget.isEmpty
-                                        ? const Center(
-                                            child: Text('No category budgets'))
-                                        : buildCard(categoriesBudget)),
-                                Container(
-                                    child: categories.isEmpty
-                                        ? const Center(
-                                            child: Text('No categories'))
-                                        : buildCard(categories)),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )));
+                        ),
+        ),
+      ),
+    );
   }
 
   Widget buildCard(List<Category> categories) => ListView.builder(
@@ -212,18 +206,15 @@ class _BudgetPageState extends State<BudgetPage>
               IconData(category.iconCodePoint, fontFamily: 'MaterialIcons');
 
           return Card(
-            margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            elevation: 4.0,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
                 title: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Icon(iconData, size: 32),
                     ),
-                    const SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         category.title,

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../model/categories.dart';
 // import 'package:uuid/uuid.dart';
@@ -21,7 +22,7 @@ class CategoriesDatabases {
     final path = dbPath + filePath;
 
     return await openDatabase(path,
-        version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+        version: 3, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -48,6 +49,16 @@ class CategoriesDatabases {
         ${CategoryFields.updatedAt} $textType
       )
     ''');
+
+    await db.insert(
+        tableCategories,
+        Category(
+          title: 'Uncategorized',
+          iconCodePoint: Icons.question_mark.codePoint,
+          categoriesType: 0,
+          createdAt: DateTime.now().toString(),
+          updatedAt: DateTime.now().toString(),
+        ).toJson());
   }
 
   Future<Category> create(Category category) async {
@@ -84,6 +95,10 @@ class CategoriesDatabases {
   Future<int> update(Category category) async {
     final db = await instance.database;
 
+    if (category.id == 1) {
+      throw Exception('Cannot update Uncategorized category');
+    }
+
     return db.update(
       tableCategories,
       category.toJson(),
@@ -94,6 +109,10 @@ class CategoriesDatabases {
 
   Future<int> delete(int id) async {
     final db = await instance.database;
+
+    if (id == 1) {
+      throw Exception('Cannot delete Uncategorized category');
+    }
 
     return await db.delete(
       tableCategories,
