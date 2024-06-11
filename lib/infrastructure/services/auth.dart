@@ -4,7 +4,8 @@ import 'package:fp_ppb_expense_tracker/infrastructure/services/shared_preference
 import 'package:fp_ppb_expense_tracker/model/user.dart';
 
 class AuthMethods {
-  final String _baseurl = 'http://localhost:8080';
+  final String _baseurl = 'https://ppb-backend-urrztf2ada-as.a.run.app';
+  // final String _baseurl = 'http://localhost:8080';
   final SecureStorage _secureStorage = SecureStorage();
   final String _loginPath = '/login';
   final String _registerPath = '/register';

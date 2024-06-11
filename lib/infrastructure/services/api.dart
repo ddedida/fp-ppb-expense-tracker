@@ -10,10 +10,10 @@ import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 class ApiService {
   final String _baseurl = 'https://ppb-backend-urrztf2ada-as.a.run.app';
   // final String _baseurl = 'http://localhost:8080';
-  final Dio _dio = Dio();
+  final dio = Dio();
 
   Future<void> getLatestExpensesStoredInCloud() async {
-    final Response response = await _dio.get(
+    final Response response = await dio.get(
       '$_baseurl/v1/expenses/latest',
     );
 
@@ -26,7 +26,7 @@ class ApiService {
 
   Future<List<dynamic>> getExpensesInCloud() async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.get(
+    final Response response = await dio.get(
       '$_baseurl/v1/expenses',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
@@ -40,7 +40,7 @@ class ApiService {
 
   Future<void> addExpenseToCloud(List<Expense> expenses) async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.post(
+    final Response response = await dio.post(
       '$_baseurl/v1/expenses',
       data: jsonEncode(expenses.map((e) => e.toJsonBackup()).toList()),
       options: Options(headers: {
@@ -58,7 +58,7 @@ class ApiService {
 
   Future<List<dynamic>> getCategoryInCloud() async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.get(
+    final Response response = await dio.get(
       '$_baseurl/v1/categories',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
@@ -72,7 +72,7 @@ class ApiService {
 
   Future<void> addCategoryToCloud(List<Category> categories) async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.post(
+    final Response response = await dio.post(
       '$_baseurl/v1/categories',
       data: jsonEncode(categories.map((e) => e.toJsonBackup()).toList()),
       options: Options(headers: {
@@ -90,7 +90,7 @@ class ApiService {
 
   Future<List<dynamic>> getBudgetInCloud() async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.get(
+    final Response response = await dio.get(
       '$_baseurl/v1/budgets',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
@@ -104,7 +104,7 @@ class ApiService {
 
   Future<void> addBudgetToCloud(List<Budget> budgets) async {
     final token = await AuthMethods().getToken();
-    final Response response = await _dio.post(
+    final Response response = await dio.post(
       '$_baseurl/v1/budgets',
       data: jsonEncode(budgets.map((e) => e.toJsonBackup()).toList()),
       options: Options(headers: {
