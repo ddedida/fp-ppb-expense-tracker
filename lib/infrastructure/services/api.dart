@@ -8,8 +8,8 @@ import 'auth.dart';
 import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 
 class ApiService {
-  // final String _baseurl = 'https://ppb-backend-urrztf2ada-as.a.run.app';
-  final String _baseurl = 'http://localhost:8080';
+  final String _baseurl = 'https://ppb-backend-urrztf2ada-as.a.run.app';
+  // final String _baseurl = 'http://localhost:8080';
   final Dio _dio = Dio();
 
   Future<void> getLatestExpensesStoredInCloud() async {
