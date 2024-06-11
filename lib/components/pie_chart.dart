@@ -32,8 +32,8 @@ class PieChartWidget extends StatelessWidget {
   }
 
   List<PieChartSectionData> showingSections(BuildContext context) {
-    final total_categories = categoryCount.length;
-    if (total_categories == 0) {
+    final totalCategories = categoryCount.length;
+    if (totalCategories == 0) {
       return List.generate(1, (i) {
         final isTouched = i == touchedIndex;
         final fontSize = isTouched ? 20.0 : 16.0;
@@ -45,6 +45,7 @@ class PieChartWidget extends StatelessWidget {
           value: 100,
           title: 'No data',
           radius: radius,
+          titlePositionPercentageOffset: 0,
           titleStyle: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
@@ -55,20 +56,20 @@ class PieChartWidget extends StatelessWidget {
       });
     }
 
-    var total_items = 0;
+    var totalItems = 0;
 
-    for (var i = 0; i < total_categories; i++) {
-      total_items += categoryCount[i]['count'] as int;
+    for (var i = 0; i < totalCategories; i++) {
+      totalItems += categoryCount[i]['count'] as int;
     }
 
-    return List.generate(total_categories, (i) {
+    return List.generate(totalCategories, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 16.0 : 12.0;
       final radius = isTouched ? 110.0 : 100.0;
       final category = categoryCount[i];
       final value = category['count'] as int;
       final title =
-          "${categoryTitles[category['category_id']]}\n${(value.toDouble() / total_items * 100).toStringAsFixed(1)}%";
+          "${categoryTitles[category['category_id']]}\n${(value.toDouble() / totalItems * 100).toStringAsFixed(1)}%";
 
       Color getRandomColor() {
         Random random = Random();
@@ -81,9 +82,10 @@ class PieChartWidget extends StatelessWidget {
       }
 
       return PieChartSectionData(
-        value: value.toDouble() / total_items * 100,
+        value: value.toDouble() / totalItems * 100,
         title: title,
         radius: radius,
+        titlePositionPercentageOffset: totalItems == 1 ? 0 : 0.5,
         titleStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,

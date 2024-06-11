@@ -60,11 +60,13 @@ class _ExpensePageState extends State<ExpensePage> {
               categoryTitles: categoryTitles,
             ),
             Expanded(
-              child: isLoading
-                  ? const CircularProgressIndicator()
-                  : expenses.isEmpty
-                      ? const Text('No expenses')
-                      : buildCard(),
+              child: Center(
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : expenses.isEmpty
+                        ? const Text('No expenses')
+                        : buildCard(),
+              ),
             ),
           ],
         ),
