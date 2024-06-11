@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/components/server_development_button_group.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/auth.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/services/shared_preferences.dart';
 import 'package:fp_ppb_expense_tracker/model/user.dart';
@@ -80,6 +81,7 @@ class _UserPageState extends State<UserPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Welcome ${user!.username}'),
+            const ServerDevelopmentButtonGroup(),
             ElevatedButton(
               onPressed: () {
                 SharedPreference.clearSharedPreference();

@@ -15,7 +15,7 @@ class UserFields {
 }
 
 class User {
-  final int id;
+  final String id;
   final String username;
   final String profilePictureUrl;
   final String createdAt;
@@ -30,7 +30,7 @@ class User {
   });
 
   User copy({
-    int? id,
+    String? id,
     String? username,
     String? profilePictureUrl,
     String? createdAt,
@@ -45,11 +45,15 @@ class User {
       );
 
   static User fromJson(Map<String, Object?> json) => User(
-        id: json[UserFields.id] as int,
+        id: json[UserFields.id] as String,
         username: json[UserFields.username] as String,
         profilePictureUrl: json[UserFields.profilePictureUrl] as String,
-        createdAt: json[UserFields.createdAt] as String,
-        updatedAt: json[UserFields.updatedAt] as String,
+        createdAt: json[UserFields.createdAt] is DateTime
+            ? (json[UserFields.createdAt] as DateTime).toIso8601String()
+            : json[UserFields.createdAt] as String,
+        updatedAt: json[UserFields.updatedAt] is DateTime
+            ? (json[UserFields.updatedAt] as DateTime).toIso8601String()
+            : json[UserFields.updatedAt] as String,
       );
 
   Map<String, Object?> toJson() => {

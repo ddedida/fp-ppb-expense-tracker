@@ -52,7 +52,8 @@ class ExpensesDatabases {
 
   Future<Expense> create(Expense expense) async {
     final db = await instance.database;
-    final id = await db.insert(tableExpenses, expense.toJson());
+    final id = await db.insert(tableExpenses, expense.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return expense.copy(id: id);
   }
 
@@ -122,13 +123,25 @@ class ExpensesDatabases {
     return result.map((json) => Expense.fromJson(json)).toList();
   }
 
-  Future<List<Expense>> readAllExpensesByCategory(String CategoryId) async {
+  Future<List<Expense>> readAllExpensesByCategory(String categoryId) async {
     final db = await instance.database;
 
     final result = await db.query(
       tableExpenses,
       where: '${ExpenseFields.categoryId} = ?',
-      whereArgs: [CategoryId],
+      whereArgs: [categoryId],
+    );
+
+    return result.map((json) => Expense.fromJson(json)).toList();
+  }
+
+  Future<List<Expense>> readAllExpensesUpdatedAfter(DateTime date) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      tableExpenses,
+      where: '${ExpenseFields.updatedAt} > ?',
+      whereArgs: [date.toIso8601String()],
     );
 
     return result.map((json) => Expense.fromJson(json)).toList();

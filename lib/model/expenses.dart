@@ -108,4 +108,15 @@ class Expense {
         ExpenseFields.createdAt: createdAt.millisecondsSinceEpoch,
         ExpenseFields.updatedAt: updatedAt.millisecondsSinceEpoch,
       };
+
+  Map<String, Object?> toJsonBackup() => {
+        'expense_id': id,
+        'title': title,
+        'amount': amount,
+        'date': date.toIso8601String(),
+        'type_id': typeId,
+        'category_id': categoryId,
+        'CreatedAt': createdAt.toUtc().toIso8601String(),
+        'UpdatedAt': updatedAt.toUtc().toIso8601String(),
+      };
 }
