@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fp_ppb_expense_tracker/model/expenses.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
 import 'package:fp_ppb_expense_tracker/model/categories.dart';
-import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
+import 'package:fp_ppb_expense_tracker/model/expenses.dart';
 
 class ExpenseAddPage extends StatefulWidget {
   final Expense? expense;
@@ -112,7 +112,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   return DropdownMenuItem(
                     value: category.id.toString(),
                     child: Text(
-                      "${category.title} ${category.id}",
+                      category.title,
                     ),
                   );
                 },

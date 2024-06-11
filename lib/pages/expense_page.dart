@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fp_ppb_expense_tracker/components/pie_chart.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
+import 'package:fp_ppb_expense_tracker/model/categories.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_add_page.dart';
 import 'package:intl/intl.dart';
-import '../model/expenses.dart';
+
 import '../infrastructure/db/expenses.dart';
+import '../model/expenses.dart';
 
 class ExpensePage extends StatefulWidget {
   const ExpensePage({super.key});
@@ -14,12 +17,23 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   late List<Expense> expenses;
+  late List<Map<String, Object?>> categoryCount = [];
+  late List<Category> categories = [];
+  late Map<String, String> categoryTitles = {};
   bool isLoading = false;
 
   Future refreshExpenses() async {
     setState(() => isLoading = true);
 
     expenses = await ExpensesDatabases.instance.readAllExpenses();
+    categoryCount =
+        await ExpensesDatabases.instance.countByCategoryThenGroupByType();
+
+    categories = await CategoriesDatabases.instance.readAllCategories();
+
+    for (Category category in categories) {
+      categoryTitles[category.id!.toString()] = category.title;
+    }
 
     setState(() => isLoading = false);
   }
@@ -38,15 +52,22 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: PieChartWidget(),
-      ),
-      body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : expenses.isEmpty
-                ? const Text('No expenses')
-                : buildCard(),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            PieChartWidget(
+              categoryCount: categoryCount,
+              categoryTitles: categoryTitles,
+            ),
+            Expanded(
+              child: isLoading
+                  ? const CircularProgressIndicator()
+                  : expenses.isEmpty
+                      ? const Text('No expenses')
+                      : buildCard(),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

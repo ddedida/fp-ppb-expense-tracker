@@ -45,8 +45,6 @@ class _HomePageState extends State<HomePage>
     switch (screenSelected) {
       case ScreenSelected.home:
         return const ExpensePage();
-      case ScreenSelected.expense:
-        return const ExpensePage();
       case ScreenSelected.category:
         return const CategoryPage();
       case ScreenSelected.budget:

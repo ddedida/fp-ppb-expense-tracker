@@ -30,10 +30,9 @@ enum ColorSeed {
 
 enum ScreenSelected {
   home(0),
-  expense(1),
-  category(2),
-  budget(3),
-  user(4);
+  category(1),
+  budget(2),
+  user(3);
 
   const ScreenSelected(this.value);
   final int value;
@@ -44,11 +43,6 @@ const List<NavigationDestination> appBarDestinations = [
     icon: Icon(Icons.home_outlined),
     label: 'Home',
     selectedIcon: Icon(Icons.home_rounded),
-  ),
-  NavigationDestination(
-    icon: Icon(Icons.money_outlined),
-    label: 'Expense',
-    selectedIcon: Icon(Icons.money_rounded),
   ),
   NavigationDestination(
     icon: Icon(Icons.category_outlined),
