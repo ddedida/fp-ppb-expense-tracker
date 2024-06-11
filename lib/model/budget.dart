@@ -71,4 +71,13 @@ class Budget {
         BudgetFields.createdAt: createdAt,
         BudgetFields.updatedAt: updatedAt,
       };
+
+  Map<String, Object?> toJsonBackup() => {
+        BudgetFields.id: id,
+        BudgetFields.amount: amount,
+        BudgetFields.date: date,
+        BudgetFields.categoryId: categoryId,
+        BudgetFields.createdAt: DateTime.parse(createdAt).toUtc().toIso8601String(),
+        BudgetFields.updatedAt: DateTime.parse(updatedAt).toUtc().toIso8601String(),
+      };
 }

@@ -104,7 +104,7 @@ class _ExpensePageState extends State<ExpensePage> {
                         ),
                       );
 
-                      refreshExpenses();
+                      await refreshExpenses();
                     },
                   ),
                   IconButton(

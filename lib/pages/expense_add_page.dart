@@ -68,6 +68,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
     }
 
     void addOrUpdateExpense() async {
+      print(_categoryId);
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         if (widget.expense == null) {
@@ -88,11 +89,22 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
             if (_categoryId == "" && categories.isNotEmpty) {
               _categoryId = categories[0].id.toString();
             }
+            var pass = false;
+            for (var category in categories) {
+              if (_categoryId == category.id.toString()) {
+                pass = true;
+                break;
+              }
+            }
+            if (!pass) {
+              _categoryId = categories[0].id.toString();
+            }
             return DropdownButtonFormField<String>(
               value: _categoryId,
               onChanged: (String? newValue) {
                 setState(() {
                   _categoryId = newValue ?? "1";
+                  print(_categoryId);
                 });
               },
               items: categories.map(

@@ -79,4 +79,15 @@ class Category {
         CategoryFields.createdAt: createdAt,
         CategoryFields.updatedAt: updatedAt,
       };
+
+  Map<String, Object?> toJsonBackup() => {
+        CategoryFields.id: id,
+        CategoryFields.title: title,
+        CategoryFields.iconCodePoint: iconCodePoint,
+        CategoryFields.categoriesType: categoriesType,
+        CategoryFields.createdAt:
+            DateTime.parse(createdAt).toUtc().toIso8601String(),
+        CategoryFields.updatedAt:
+            DateTime.parse(updatedAt).toUtc().toIso8601String(),
+      };
 }

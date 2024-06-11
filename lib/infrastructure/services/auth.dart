@@ -32,13 +32,14 @@ class AuthMethods {
   }
 
   Future<void> register(String email, String password) async {
+    var formData = FormData.fromMap({
+      'username': email,
+      'password': password,
+      'confirm_password': password,
+    });
     final Response response = await _dio.post(
       '$_baseurl$_registerPath',
-      data: {
-        'email': email,
-        'password': password,
-        'confirm_password': password,
-      },
+      data: formData,
     );
 
     if (response.statusCode != 200) {

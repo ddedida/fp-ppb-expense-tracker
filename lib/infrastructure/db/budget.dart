@@ -43,7 +43,8 @@ class BudgetDatabase {
 
   Future<Budget> create(Budget budget) async {
     final db = await instance.database;
-    final id = await db.insert(tableBudgets, budget.toJson());
+    final id = await db.insert(tableBudgets, budget.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return budget.copy(id: id);
   }
 

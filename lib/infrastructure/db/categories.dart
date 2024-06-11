@@ -63,7 +63,8 @@ class CategoriesDatabases {
 
   Future<Category> create(Category category) async {
     final db = await instance.database;
-    final id = await db.insert(tableCategories, category.toJson());
+    final id = await db.insert(tableCategories, category.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return category.copy(id: id);
   }
 
