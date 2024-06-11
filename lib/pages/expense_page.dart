@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fp_ppb_expense_tracker/components/pie_chart.dart';
 import 'package:fp_ppb_expense_tracker/pages/expense_add_page.dart';
 import 'package:intl/intl.dart';
 import '../model/expenses.dart';
@@ -37,6 +38,9 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: PieChartWidget(),
+      ),
       body: Center(
         child: isLoading
             ? const CircularProgressIndicator()

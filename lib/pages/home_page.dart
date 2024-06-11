@@ -44,9 +44,7 @@ class _HomePageState extends State<HomePage>
   Widget createScreen(ScreenSelected screenSelected) {
     switch (screenSelected) {
       case ScreenSelected.home:
-        return const Center(
-          child: Text("home"),
-        );
+        return const ExpensePage();
       case ScreenSelected.expense:
         return const ExpensePage();
       case ScreenSelected.category:

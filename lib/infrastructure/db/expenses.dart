@@ -111,6 +111,20 @@ class ExpensesDatabases {
     db.close();
   }
 
+  Future countByCategoryThenGroupByType() async {
+    final db = await instance.database;
+
+    final result = await db.rawQuery(
+      '''
+      SELECT ${ExpenseFields.categoryId}, COUNT(1) as count
+      FROM $tableExpenses
+      GROUP BY ${ExpenseFields.categoryId}
+    ''',
+    );
+
+    return result.toList();
+  }
+
   Future<List<Expense>> readAllExpensesByType(int type) async {
     final db = await instance.database;
 
