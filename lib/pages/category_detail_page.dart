@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:fp_ppb_expense_tracker/constant.dart';
-import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
-import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
 import 'package:fp_ppb_expense_tracker/infrastructure/db/categories.dart';
+import 'package:fp_ppb_expense_tracker/infrastructure/db/expenses.dart';
 import 'package:fp_ppb_expense_tracker/model/categories.dart';
 import 'package:fp_ppb_expense_tracker/model/expenses.dart';
+import 'package:fp_ppb_expense_tracker/pages/category_add_page.dart';
+import 'package:fp_ppb_expense_tracker/pages/expense_add_page.dart';
+import 'package:intl/intl.dart';
 
 class CategoryDetailPage extends StatefulWidget {
   final Category? category;
@@ -147,9 +148,11 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () async {
-                        await Navigator.of(context).pushNamed(
-                          '/expense/add',
-                          arguments: expense,
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ExpenseAddPage(expense: expense),
+                          ),
                         );
 
                         refreshListOfExpenses();
